@@ -52,3 +52,13 @@ resource "google_compute_firewall" "fw" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["allow-ssh-${var.hostname}-${count.index}"]
 }
+
+resource "aws_route53_record" "srv" {
+  count = var.num_vms
+
+  zone_id = data.aws_route53_zone.domain_name.zone_id
+  name    = "${var.hostname}${count.index}.${data.aws_route53_zone.domain_name.name}"
+  type    = "A"
+  ttl     = "1"
+  records = [google_compute_instance.instance[count.index].network_interface[0].network_ip]
+}
