@@ -22,3 +22,4 @@ variable "hostname" {
 variable "domain_name" {
   default = "avxlab.de"
 }
+variable "cloud_init_data" {}

@@ -16,11 +16,10 @@ resource "google_compute_instance" "instance" {
     subnetwork = var.subnet
   }
 
-  metadata_startup_script = "sudo apt-get update && sudo apt-get install iperf3 -y"
-
   tags = ["allow-ssh-${var.hostname}-${count.index}"]
   metadata = {
-    ssh-keys = "ubuntu:${var.ssh_key}"
+    ssh-keys = "ubuntu:${var.ssh_key}",
+    metadata = var.cloud_init_data
   }
 }
 
