@@ -61,5 +61,5 @@ resource "aws_route53_record" "srv" {
   name    = "${var.hostname}${count.index}.${data.aws_route53_zone.domain_name.name}"
   type    = "A"
   ttl     = "1"
-  records = [google_compute_instance.instance[count.index].network_interface[0].network_ip]
+  records = [google_compute_instance.instance[count.index].network_interface[0].access_config.nat_ip] ## network_ip]
 }
