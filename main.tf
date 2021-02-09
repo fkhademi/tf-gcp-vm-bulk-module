@@ -14,6 +14,7 @@ resource "google_compute_instance" "instance" {
   network_interface {
     network    = var.vpc
     subnetwork = var.subnet
+    access_config {}
   }
 
   tags = ["allow-ssh-${var.hostname}-${count.index}"]
@@ -33,23 +34,24 @@ resource "google_compute_firewall" "fw" {
     protocol = "tcp"
     ports    = ["22"]
   }
-
   allow {
     protocol = "tcp"
-    ports    = ["5201"]
+    ports    = ["8080"]
   }
-
   allow {
-    protocol = "udp"
-    ports    = ["5201"]
+    protocol = "tcp"
+    ports    = ["80"]
   }
-
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
   allow {
     protocol = "icmp"
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["allow-ssh-${var.hostname}-${count.index}"]
+  target_tags   = ["allow-ssh-http-${var.hostname}-${count.index}"]
 }
 
 resource "aws_route53_record" "srv" {
